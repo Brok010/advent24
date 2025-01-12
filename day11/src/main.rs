@@ -9,13 +9,13 @@ fn main() {
     println!("{}, {}", part1, part2);
 }
 
-fn solve(stones: &Vec<i64>, ticks: i32) -> i32 {
-    let mut result = 0;
-    let mut cache: HashMap<(i64, i32), i32> = HashMap::new(); // stone, ticks -> result
+fn solve(stones: &Vec<i64>, ticks: i32) -> i64 {
+    let mut result:i64 = 0;
+    let mut cache: HashMap<(i64, i32), i64> = HashMap::new(); // stone, ticks -> result
     
     for &stone in stones {
         if let Some(&value) = cache.get(&(stone, ticks)) {
-            result += value;
+            result += value as i64;
         } else {
             let new_result = get_result(stone, 0, ticks, &mut cache);
             result += new_result;
@@ -25,18 +25,18 @@ fn solve(stones: &Vec<i64>, ticks: i32) -> i32 {
     result
 }
 
-fn get_result(stone: i64, current_ticks: i32, ticks: i32, cache: &mut HashMap<(i64, i32), i32>) -> i32 {
+fn get_result(stone: i64, current_ticks: i32, ticks: i32, cache: &mut HashMap<(i64, i32), i64>) -> i64 {
     if current_ticks == ticks {
         return 1;
     }
 
     let new_cache_entry = (stone, current_ticks);
     if let Some(&value) = cache.get(&new_cache_entry) {
-        return value;
+        return value as i64; //ouch
     }
 
     let new_stones = get_new_stones(stone);
-    let mut result = 0;
+    let mut result:i64 = 0;
 
     for ns in new_stones {
         result += get_result(ns, current_ticks + 1, ticks, cache);
